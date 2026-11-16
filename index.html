@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0e1c28" />
+    <title>Learning hub: Docker, Node.js, Databases and Roadmaps</title>
+    <meta
+      name="description"
+      content="Hands-on tutorials and PDF guides for Docker, Node.js, databases (SQL, PostgreSQL, MongoDB) and developer roadmaps."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><rect width='40' height='40' rx='6' fill='%230e1c28'/><rect x='7' y='9' width='26' height='7' rx='1' fill='%23f5b942'/><rect x='7' y='18' width='26' height='7' rx='1' fill='%235bb4f5'/><rect x='7' y='27' width='26' height='7' rx='1' fill='%236fd3a8'/></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <script>
+      /* =====================================================================
+   YOUR LINKS — paste your URLs here. This is the only part you edit.
+
+   site : the Vercel URL of the tutorial app, e.g. "https://docker-tutorial.vercel.app"
+   pdf  : the Google Drive share link of the PDF, e.g.
+          "https://drive.google.com/file/d/1AbC.../view?usp=sharing"
+          (In Drive: Share → General access → "Anyone with the link".)
+
+   Leave a value as "" and its button shows "Coming soon".
+   ===================================================================== */
+      // ⚠ DUMMY LINKS — replace each one with your real URL.
+      const LINKS = {
+        docker: {
+          site: "https://docker-tutorial-seven.vercel.app/",
+          pdf: "https://drive.google.com/file/d/1qoCwvndtx3-ucWOtoMIKBCbZeDdc_B0Y/view?usp=drive_link",
+        },
+        node: {
+          site: "https://node-js-tutorial-nine.vercel.app/",
+          pdf: "https://drive.google.com/file/d/1sF6p-7oDqGqFZ4kO_XykLu6MbQ6cHt6c/view?usp=drive_link",
+        },
+        databases: {
+          site: "http://databases-tutorials.vercel.app/",
+          pdf: "https://drive.google.com/file/d/1_aWuiyukxqAlRLZxDwJRMZt0l3KZruwX/view?usp=sharing",
+        },
+        roadmaps: {
+          pdf: "https://drive.google.com/file/d/1korONvHowa8xAwNnVGORu4lXnyIp-Kcz/view?usp=drive_link",
+        },
+      };
+    </script>
+
+    <style>
+      :root {
+        --sea: #0e1c28;
+        --hull: #142636;
+        --deck: #1a3044;
+        --rope: #284460;
+        --foam: #e3ebf2;
+        --mist: #9db2c4;
+        --signal: #f5b942;
+        --tide: #5bb4f5;
+        --kelp: #6fd3a8;
+        --rust: #f08a6c;
+        --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+        --body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+        --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+        color-scheme: dark;
+        box-sizing: border-box;
+        padding-top: env(safe-area-inset-top, 0px);
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+      }
+      *,
+      *::before,
+      *::after {
+        box-sizing: inherit;
+      }
+      html {
+        scroll-padding-top: env(safe-area-inset-top, 0px);
+      }
+      body {
+        margin: 0;
+        background: var(--sea);
+        color: var(--foam);
+        font: 18px/1.65 var(--body);
+        -webkit-font-smoothing: antialiased;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button {
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+      a:focus-visible,
+      button:focus-visible {
+        outline: 2px solid var(--signal);
+        outline-offset: 3px;
+      }
+
+      .wrap {
+        max-width: 1080px;
+        margin: 0 auto;
+        padding: 0 28px 96px;
+      }
+
+      /* ---------- Header ---------- */
+      .top {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 28px 0 0;
+      }
+      .mark {
+        width: 30px;
+        height: 30px;
+        flex-shrink: 0;
+      }
+      .top-name {
+        font: 700 1.15rem var(--display);
+        letter-spacing: -0.01em;
+      }
+
+      .hero {
+        padding: 64px 0 40px;
+      }
+      .kicker {
+        color: var(--signal);
+        margin: 0 0 14px;
+      }
+      .hero h1 {
+        font: 800 clamp(2.6rem, 7vw, 4.8rem)/0.98 var(--display);
+        letter-spacing: -0.03em;
+        margin: 0 0 22px;
+        max-width: 14ch;
+      }
+      .lede {
+        color: var(--mist);
+        font-size: 1.2rem;
+        max-width: 58ch;
+        margin: 0;
+      }
+
+      .stats {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 28px;
+        margin: 30px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .stats li {
+        display: flex;
+        flex-direction: column;
+      }
+      .stats b {
+        font: 800 1.9rem/1 var(--display);
+        color: var(--foam);
+      }
+      .stats span {
+        color: var(--mist);
+        font-size: 0.85rem;
+        margin-top: 4px;
+      }
+
+      /* ---------- Section heading ---------- */
+      .sec-h {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin: 48px 0 16px;
+        padding-top: 20px;
+        border-top: 1px solid var(--rope);
+        flex-wrap: wrap;
+      }
+      .sec-h h2 {
+        font: 700 1.5rem var(--display);
+        margin: 0;
+      }
+      .sec-h p {
+        margin: 0;
+        color: var(--mist);
+        font-size: 0.9rem;
+      }
+
+      /* ---------- Cards: shipping containers ---------- */
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+        gap: 18px;
+      }
+
+      .card {
+        --accent: var(--signal);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--rope);
+        border-radius: 6px;
+        overflow: hidden;
+        background: var(--hull);
+      }
+      .card-door {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 20px;
+        background:
+          repeating-linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 0 3px,
+            rgba(0, 0, 0, 0.1) 3px 8px
+          ),
+          var(--deck);
+        border-bottom: 3px solid var(--accent);
+      }
+      .card-door::after {
+        /* door seam */
+        content: "";
+        position: absolute;
+        right: 64px;
+        top: 10px;
+        bottom: 10px;
+        width: 1px;
+        background: var(--rope);
+      }
+      .card-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        color: var(--accent);
+      }
+      .card-kind {
+        font: 600 0.72rem var(--mono);
+        color: var(--accent);
+        letter-spacing: 0.04em;
+      }
+      .card h3 {
+        font: 800 1.45rem/1.1 var(--display);
+        letter-spacing: -0.015em;
+        margin: 2px 0 0;
+      }
+      .card-num {
+        margin-left: auto;
+        font: 600 0.85rem var(--mono);
+        color: var(--mist);
+        position: relative;
+        z-index: 1;
+      }
+
+      .card-body {
+        padding: 18px 20px 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
+      .card-body p {
+        margin: 0 0 14px;
+        color: var(--mist);
+        font-size: 0.98rem;
+        line-height: 1.55;
+      }
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 16px;
+        margin: 0 0 14px;
+        padding: 0;
+        list-style: none;
+        font: 0.8rem var(--mono);
+        color: var(--foam);
+      }
+      .meta li::before {
+        content: "▪ ";
+        color: var(--accent);
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: 0 0 20px;
+        padding: 0;
+        list-style: none;
+      }
+      .chips li {
+        font-size: 0.78rem;
+        color: var(--mist);
+        border: 1px solid var(--rope);
+        border-radius: 99px;
+        padding: 2px 10px;
+        background: var(--sea);
+      }
+
+      .actions {
+        margin-top: auto;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        flex: 1 1 140px;
+        padding: 11px 16px;
+        border-radius: 6px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        border: 1px solid transparent;
+        white-space: nowrap;
+        transition:
+          background-color 0.15s,
+          border-color 0.15s,
+          color 0.15s;
+      }
+      .btn svg {
+        width: 18px;
+        height: 18px;
+        flex-shrink: 0;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #10202c;
+      }
+      .btn-primary:hover {
+        filter: brightness(1.08);
+      }
+      .btn-ghost {
+        background: transparent;
+        border-color: var(--rope);
+        color: var(--foam);
+      }
+      .btn-ghost:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .btn[aria-disabled="true"] {
+        background: transparent;
+        border: 1px dashed var(--rope);
+        color: var(--mist);
+        cursor: default;
+        filter: none;
+        font-weight: 400;
+      }
+
+      /* ---------- PDF viewer dialog ---------- */
+      dialog.viewer {
+        width: min(980px, 94vw);
+        height: min(88vh, 1100px);
+        padding: 0;
+        border: 1px solid var(--rope);
+        border-radius: 10px;
+        background: var(--hull);
+        color: var(--foam);
+      }
+      dialog.viewer::backdrop {
+        background: rgba(5, 12, 18, 0.78);
+        backdrop-filter: blur(2px);
+      }
+      .viewer-inner {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      .viewer-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        padding: 12px 14px 12px 18px;
+        border-bottom: 1px solid var(--rope);
+      }
+      .viewer-title {
+        font: 700 1.05rem var(--display);
+        margin: 0;
+        flex: 1;
+        min-width: 180px;
+      }
+      .viewer-bar .btn {
+        flex: 0 0 auto;
+        padding: 8px 14px;
+        font-size: 0.88rem;
+      }
+      .icon-btn {
+        width: 38px;
+        height: 38px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--rope);
+        border-radius: 6px;
+        background: transparent;
+      }
+      .icon-btn:hover {
+        border-color: var(--foam);
+      }
+      .icon-btn svg {
+        width: 18px;
+        height: 18px;
+      }
+      .viewer-frame {
+        flex: 1;
+        position: relative;
+        background: #0a1620;
+      }
+      .viewer-frame iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+      .viewer-note {
+        padding: 8px 18px;
+        font-size: 0.8rem;
+        color: var(--mist);
+        border-top: 1px solid var(--rope);
+        margin: 0;
+      }
+
+      /* ---------- Footer ---------- */
+      footer {
+        margin-top: 64px;
+        padding-top: 22px;
+        border-top: 1px solid var(--rope);
+        color: var(--mist);
+        font-size: 0.88rem;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          font-size: 17px;
+        }
+        .wrap {
+          padding: 0 18px 64px;
+        }
+        .hero {
+          padding: 40px 0 24px;
+        }
+        .card-door::after {
+          display: none;
+        }
+        .btn {
+          padding: 11px 12px;
+          font-size: 0.92rem;
+        }
+        dialog.viewer {
+          width: 100vw;
+          height: 100%;
+          max-height: none;
+          max-width: none;
+          border-radius: 0;
+        }
+      }
+      @media (prefers-reduced-motion: no-preference) {
+        .card {
+          animation: dock 0.45s ease-out both;
+        }
+        .card:nth-child(2) {
+          animation-delay: 0.06s;
+        }
+        .card:nth-child(3) {
+          animation-delay: 0.12s;
+        }
+        @keyframes dock {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: none;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+          <rect x="4" y="5" width="32" height="8" rx="1.5" fill="#f5b942" />
+          <rect x="4" y="16" width="32" height="8" rx="1.5" fill="#5bb4f5" />
+          <rect x="4" y="27" width="32" height="8" rx="1.5" fill="#6fd3a8" />
+        </svg>
+        <span class="top-name">Topic by topic</span>
+      </header>
+
+      <section class="hero">
+        <p class="kicker">Free, hands-on learning</p>
+        <h1>Learn backend skills one topic at a time.</h1>
+        <p class="lede">
+          Interactive tutorials for Docker, Node.js and databases, each with a
+          matching PDF guide — plus a roadmap book with interview questions for
+          React, Node.js and full stack developers.
+        </p>
+        <ul class="stats" aria-label="Course totals">
+          <li><b>50</b><span>lessons</span></li>
+          <li><b>7 h</b><span>of reading</span></li>
+          <li><b>4</b><span>PDF guides</span></li>
+          <li><b>118</b><span>interview questions</span></li>
+        </ul>
+      </section>
+
+      <div class="sec-h">
+        <h2>Tutorials</h2>
+        <p>Open the interactive site, or read the PDF version.</p>
+      </div>
+
+      <div class="grid">
+        <!-- Docker -->
+        <article
+          class="card"
+          style="--accent: var(--tide)"
+          data-key="docker"
+          data-title="Docker, topic by topic"
+        >
+          <div class="card-door">
+            <svg
+              class="card-icon"
+              viewBox="0 0 40 40"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+            >
+              <rect x="4" y="22" width="32" height="12" rx="1.5" />
+              <rect x="8" y="12" width="11" height="10" />
+              <rect x="21" y="12" width="11" height="10" />
+              <rect x="14.5" y="3" width="11" height="9" />
+            </svg>
+            <div>
+              <span class="card-kind">TUTORIAL</span>
+              <h3>Docker</h3>
+            </div>
+            <span class="card-num">01</span>
+          </div>
+          <div class="card-body">
+            <p>
+              Containers from first principles to production: images,
+              Dockerfiles, volumes, networking, Compose, security and
+              deployment.
+            </p>
+            <ul class="meta">
+              <li>15 lessons</li>
+              <li>~120 min</li>
+              <li>27-page PDF</li>
+            </ul>
+            <ul class="chips">
+              <li>Dockerfile</li>
+              <li>Compose</li>
+              <li>Volumes</li>
+              <li>Networking</li>
+              <li>Security</li>
+            </ul>
+            <div class="actions"></div>
+          </div>
+        </article>
+
+        <!-- Node.js -->
+        <article
+          class="card"
+          style="--accent: var(--kelp)"
+          data-key="node"
+          data-title="Node.js, topic by topic"
+        >
+          <div class="card-door">
+            <svg class="card-icon" viewBox="0 0 40 46" aria-hidden="true">
+              <path
+                d="M20 2 L38 12.5 V33.5 L20 44 L2 33.5 V12.5 Z"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="3"
+              />
+              <path
+                d="M20 13 L29 18.2 V28.8 L20 34 L11 28.8 V18.2 Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div>
+              <span class="card-kind">TUTORIAL</span>
+              <h3>Node.js</h3>
+            </div>
+            <span class="card-num">02</span>
+          </div>
+          <div class="card-body">
+            <p>
+              JavaScript on the server: modules, async and the event loop,
+              streams, Express APIs, databases, testing and production. Videos
+              in English and हिन्दी.
+            </p>
+            <ul class="meta">
+              <li>16 lessons</li>
+              <li>~130 min</li>
+              <li>34-page PDF</li>
+            </ul>
+            <ul class="chips">
+              <li>Event loop</li>
+              <li>Express</li>
+              <li>Streams</li>
+              <li>node:test</li>
+              <li>EN / हिन्दी videos</li>
+            </ul>
+            <div class="actions"></div>
+          </div>
+        </article>
+
+        <!-- Databases -->
+        <article
+          class="card"
+          style="--accent: var(--signal)"
+          data-key="databases"
+          data-title="Databases, topic by topic"
+        >
+          <div class="card-door">
+            <svg
+              class="card-icon"
+              viewBox="0 0 40 46"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+            >
+              <ellipse cx="20" cy="9" rx="16" ry="6" />
+              <path d="M4 9v28c0 3.3 7.2 6 16 6s16-2.7 16-6V9" />
+              <path d="M4 23c0 3.3 7.2 6 16 6s16-2.7 16-6" />
+            </svg>
+            <div>
+              <span class="card-kind">TUTORIAL</span>
+              <h3>Databases</h3>
+            </div>
+            <span class="card-num">03</span>
+          </div>
+          <div class="card-body">
+            <p>
+              SQL, PostgreSQL and MongoDB through one bookstore example: joins,
+              indexes, transactions, JSONB, aggregation and Mongoose. Videos in
+              English and हिन्दी.
+            </p>
+            <ul class="meta">
+              <li>19 lessons</li>
+              <li>~166 min</li>
+              <li>42-page PDF</li>
+            </ul>
+            <ul class="chips">
+              <li>SQL</li>
+              <li>PostgreSQL</li>
+              <li>MongoDB</li>
+              <li>Mongoose</li>
+              <li>EN / हिन्दी videos</li>
+            </ul>
+            <div class="actions"></div>
+          </div>
+        </article>
+      </div>
+
+      <div class="sec-h">
+        <h2>Guides</h2>
+        <p>PDF only.</p>
+      </div>
+
+      <div class="grid">
+        <article
+          class="card"
+          style="--accent: var(--rust)"
+          data-key="roadmaps"
+          data-title="Developer roadmaps"
+        >
+          <div class="card-door">
+            <svg
+              class="card-icon"
+              viewBox="0 0 40 40"
+              aria-hidden="true"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.5"
+              stroke-linecap="round"
+            >
+              <circle cx="8" cy="8" r="4" />
+              <circle cx="32" cy="20" r="4" />
+              <circle cx="8" cy="32" r="4" />
+              <path d="M12 8h10a6 6 0 0 1 6 6v2M28 24v2a6 6 0 0 1-6 6H12" />
+            </svg>
+            <div>
+              <span class="card-kind">PDF GUIDE</span>
+              <h3>Developer roadmaps</h3>
+            </div>
+            <span class="card-num">04</span>
+          </div>
+          <div class="card-body">
+            <p>
+              Step-by-step paths for React, Node.js and full stack developers.
+              Every stage has what to learn, a project to build and interview
+              questions with answers.
+            </p>
+            <ul class="meta">
+              <li>3 roadmaps</li>
+              <li>28 stages</li>
+              <li>118 questions</li>
+              <li>33 pages</li>
+            </ul>
+            <ul class="chips">
+              <li>React</li>
+              <li>Node.js</li>
+              <li>Full stack</li>
+              <li>Interview prep</li>
+            </ul>
+            <div class="actions"></div>
+          </div>
+        </article>
+      </div>
+
+      <footer>
+        Built topic by topic. PDFs open from Google Drive; if one does not load,
+        use “Open in Drive”.
+      </footer>
+    </div>
+
+    <!-- PDF viewer -->
+    <dialog class="viewer" id="viewer" aria-labelledby="viewer-title">
+      <div class="viewer-inner">
+        <div class="viewer-bar">
+          <h2 class="viewer-title" id="viewer-title">PDF</h2>
+          <a
+            class="btn btn-ghost"
+            id="viewer-open"
+            target="_blank"
+            rel="noopener"
+            >Open in Drive</a
+          >
+          <a
+            class="btn btn-ghost"
+            id="viewer-download"
+            target="_blank"
+            rel="noopener"
+            >Download</a
+          >
+          <button
+            class="icon-btn"
+            id="viewer-close"
+            type="button"
+            aria-label="Close"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+            >
+              <path d="M6 6l12 12M18 6L6 18" />
+            </svg>
+          </button>
+        </div>
+        <div class="viewer-frame">
+          <iframe
+            id="viewer-frame"
+            title="PDF preview"
+            allow="autoplay"
+          ></iframe>
+        </div>
+        <p class="viewer-note">
+          If the preview stays blank, make sure the file is shared as “Anyone
+          with the link”.
+        </p>
+      </div>
+    </dialog>
+
+    <script>
+      (() => {
+        const ICON_EXT =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>';
+        const ICON_PDF =
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v12a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>';
+
+        // Pull the file id out of any common Google Drive link format.
+        function driveId(url) {
+          if (!url) return null;
+          const m =
+            url.match(/\/d\/([A-Za-z0-9_-]{10,})/) ||
+            url.match(/[?&]id=([A-Za-z0-9_-]{10,})/);
+          return m ? m[1] : null;
+        }
+
+        function soon(label) {
+          const s = document.createElement("span");
+          s.className = "btn";
+          s.setAttribute("aria-disabled", "true");
+          s.textContent = label + " · coming soon";
+          return s;
+        }
+
+        document.querySelectorAll(".card").forEach((card) => {
+          const key = card.dataset.key;
+          const links = LINKS[key] || {};
+          const actions = card.querySelector(".actions");
+
+          if ("site" in links) {
+            if (links.site) {
+              const a = document.createElement("a");
+              a.className = "btn btn-primary";
+              a.href = links.site;
+              a.target = "_blank";
+              a.rel = "noopener";
+              a.innerHTML = ICON_EXT + "<span>Open tutorial</span>";
+              actions.append(a);
+            } else {
+              actions.append(soon("Tutorial"));
+            }
+          }
+
+          if (links.pdf) {
+            const b = document.createElement("button");
+            b.type = "button";
+            b.className = "site" in links ? "btn btn-ghost" : "btn btn-primary";
+            b.innerHTML = ICON_PDF + "<span>View PDF</span>";
+            b.addEventListener("click", () =>
+              openPdf(card.dataset.title, links.pdf),
+            );
+            actions.append(b);
+          } else {
+            actions.append(soon("PDF"));
+          }
+        });
+
+        const dlg = document.getElementById("viewer");
+        const frame = document.getElementById("viewer-frame");
+        const openLink = document.getElementById("viewer-open");
+        const dlLink = document.getElementById("viewer-download");
+
+        function openPdf(title, url) {
+          const id = driveId(url);
+          document.getElementById("viewer-title").textContent =
+            title + " (PDF)";
+          openLink.href = url;
+          if (id) {
+            frame.src = `https://drive.google.com/file/d/${id}/preview`;
+            dlLink.href = `https://drive.google.com/uc?export=download&id=${id}`;
+            dlLink.hidden = false;
+          } else {
+            // Not a Drive link: show it directly (works for most direct PDF URLs)
+            frame.src = url;
+            dlLink.href = url;
+          }
+          if (typeof dlg.showModal === "function") dlg.showModal();
+          else window.open(url, "_blank", "noopener");
+        }
+
+        function closePdf() {
+          dlg.close();
+        }
+        dlg.addEventListener("close", () => {
+          frame.src = "about:blank";
+        });
+        document
+          .getElementById("viewer-close")
+          .addEventListener("click", closePdf);
+        dlg.addEventListener("click", (e) => {
+          if (e.target === dlg) closePdf();
+        }); // click backdrop
+      })();
+    </script>
+  </body>
+</html>
